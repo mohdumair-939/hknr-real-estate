@@ -1,0 +1,44 @@
+# Render Blueprint — describes the web service. Nothing is created until you apply it
+# from the Render dashboard (New → Blueprint). See docs/deployment.md before applying.
+services:
+  - type: web
+    name: hknr-website
+    runtime: node
+    # "starter" (paid) stays awake; "free" sleeps after inactivity and is slow on the first visit.
+    plan: starter
+    region: singapore
+    buildCommand: npm ci && npm run db:migrate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: IP_HASH_SALT
+        generateValue: true
+      - key: ALLOW_INDEXING
+        value: "false"
+      - key: STORAGE_DRIVER
+        value: s3
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        value: auto
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_PUBLIC_BASE_URL
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false

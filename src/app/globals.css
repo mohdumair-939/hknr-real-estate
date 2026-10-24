@@ -1,26 +1,209 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * HKNR design tokens. Every colour used in components comes from here.
+ * Contrast ratios are recorded in docs/design-system.md.
+ */
+@theme {
+  /* Brand */
+  --color-charcoal: #242522;
+  --color-charcoal-soft: #2e2f2b;
+  --color-ivory: #f5f1e9;
+  --color-bronze: #b49a70; /* fills, rules, text on charcoal only */
+  --color-bronze-ink: #7a6240; /* bronze text on light backgrounds (≥5:1) */
+  --color-bronze-light: #c9b48f; /* bronze text on charcoal (7.6:1) */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Surfaces */
+  --color-canvas: #faf8f4;
+  --color-surface: #ffffff;
+  --color-sunken: #f2eee6;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Text */
+  --color-ink: #252620;
+  --color-ink-muted: #68685f;
+  --color-ink-inverse: #f5f1e9;
+  --color-ink-inverse-muted: #a8a69c;
+
+  /* Lines */
+  --color-line: #e6e1d8; /* decorative dividers */
+  --color-line-strong: #8f8878; /* form control borders (3.5:1) */
+
+  /* Feedback */
+  --color-danger: #9b2c2c;
+  --color-danger-soft: #fbeceb;
+  --color-success: #1f6b45;
+  --color-success-soft: #e8f3ec;
+  --color-warning: #8a5a00;
+  --color-warning-soft: #fbf1dc;
+  --color-info: #2c4a6b;
+  --color-info-soft: #e9eff6;
+
+  --color-focus: #1f4fbf;
+
+  /* Typography */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  /* Radius: restrained */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(36 37 34 / 0.06), 0 1px 1px rgb(36 37 34 / 0.04);
+  --shadow-raised: 0 8px 24px -8px rgb(36 37 34 / 0.18), 0 2px 6px rgb(36 37 34 / 0.06);
+  --shadow-overlay: 0 24px 48px -12px rgb(36 37 34 / 0.3);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  /* Layout */
+  --container-content: 76rem; /* 1216px */
+  --container-prose: 42rem;
+
+  --breakpoint-xs: 23.4375rem; /* 375px */
+
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  @keyframes shimmer {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  :root {
+    color-scheme: light;
+    --z-header: 30;
+    --z-drawer: 50;
+    --z-toast: 60;
+    --header-h: 4rem;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One consistent, high-visibility focus ring everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  .on-dark :focus-visible {
+    outline-color: var(--color-ivory);
+  }
+
+  ::selection {
+    background: var(--color-bronze);
+    color: var(--color-charcoal);
+  }
+
+  dialog::backdrop {
+    background: rgb(20 20 18 / 0.55);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: max(1rem, env(safe-area-inset-left));
+    padding-inline-end: max(1rem, env(safe-area-inset-right));
+  }
+  @media (min-width: 48rem) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Editorial type scale (fluid between 320px and 1280px). */
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 1.6rem + 3.2vw, 4.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .text-h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 1.6rem + 2vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .text-h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.625rem, 1.4rem + 1.1vw, 2.375rem);
+    line-height: 1.15;
+  }
+  .text-h3 {
+    font-weight: 600;
+    font-size: 1.1875rem;
+    line-height: 1.35;
+  }
+  .text-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .prose-body {
+    max-width: var(--container-prose);
+    color: var(--color-ink);
+  }
+  .prose-body p + p {
+    margin-top: 1em;
+  }
+
+  .skeleton {
+    background: var(--color-sunken);
+    border-radius: var(--radius-sm);
+    animation: var(--animate-shimmer);
+  }
 }
