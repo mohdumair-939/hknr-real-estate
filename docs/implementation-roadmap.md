@@ -32,9 +32,11 @@ Status as of **24 Oct 2026**. ✅ done and verified · 🟡 done, needs business
 - ✅ Typecheck, lint, 67 unit/integration tests, 26 E2E tests incl. axe scans; production build.
 - ⬜ Real-device, screen-reader and Lighthouse passes on the deployed site (`testing-and-qa.md`).
 
-## Phase 7: deployment ⬜ (blocked on accounts)
-- ✅ `render.yaml`, `.env.example`, health check, migration-in-build, deployment and recovery docs.
-- ⬜ Needs: GitHub repo, Postgres URL, S3/R2 bucket, Render service, plan approval.
+## Phase 7: deployment 🟡 (trial live on free plans)
+- ✅ Live at https://hknr-website.onrender.com (Render free web service + free Postgres `hknr-db`, Singapore; photos on Cloudflare R2).
+- ✅ Verified 24 Oct 2026: health check, all public pages, 404, admin login redirect, security headers, indexing blocked, no sample content, first admin created, photo upload to R2 and display, enquiry saved and visible in admin.
+- ⬜ Before real customers: upgrade web service to Starter and Postgres to a paid plan (**free DB is deleted ~23 Nov 2026**).
+- ⬜ Email notifications (Resend + domain), custom domain + `SITE_URL`, then `ALLOW_INDEXING=true` once real content is live.
 
 ## Later (not in scope yet)
 - MFA for staff; automated enquiry retention clean-up; WhatsApp/SMS notifications; per-locality guide pages once real content exists; multi-instance shared cache.
