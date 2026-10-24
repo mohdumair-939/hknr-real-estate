@@ -55,5 +55,7 @@ async function main() {
 
 main().catch((err) => {
   console.error(err instanceof Error ? err.message : err);
+  // Drizzle wraps driver errors ("Failed query: …"); the cause holds the real reason (SSL, auth, network).
+  if (err instanceof Error && err.cause) console.error("Cause:", err.cause instanceof Error ? err.cause.message : err.cause);
   process.exit(1);
 });
