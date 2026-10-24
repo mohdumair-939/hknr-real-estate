@@ -1,5 +1,7 @@
 # Deployment (Render)
 
+> **Current setup: free trial plans** (`render.yaml`). The free web service sleeps when idle and the free database is **deleted after 30 days**. Upgrade the web service to Starter and the database to a paid plan before real customers use the site.
+
 Nothing has been deployed yet. Domain purchase is out of scope; the site uses Render's `*.onrender.com` URL until a domain is chosen.
 
 ## What you'll need (and what I'll ask you for)
@@ -30,8 +32,14 @@ Nothing has been deployed yet. Domain purchase is out of scope; the site uses Re
    - `SITE_URL` can stay empty (falls back to `RENDER_EXTERNAL_URL`)
    - Don't set `NODE_ENV`; Render and Next handle it.
 5. **First deploy**: the build runs migrations, then builds. **The build needs database access**, because pages are prerendered from real data.
-6. **First administrator** (no default account exists): in the Render Shell for the service,
-   `npm run admin:create -- --email owner@<domain> --name "Owner Name"`. Copy the one-time password, sign in at `/admin/login`, then change it under Account.
+6. **First administrator** (no default account exists). On a paid instance, run in the Render Shell:
+   `npm run admin:create -- --email owner@<domain> --name "Owner Name"`.
+   On the free plan (no Shell), run it from your own computer against the database's **External Database URL**
+   (Render → hknr-db → Connect → External):
+   ```bash
+   DATABASE_URL="<External Database URL>?sslmode=require" npm run admin:create -- --email owner@<domain> --name "Owner Name"
+   ```
+   Copy the one-time password, sign in at `/admin/login`, then change it under Account.
 7. **Enter verified business details** in Admin → Settings, then add localities, services, listings and projects.
 
 ## Verifying a deployment

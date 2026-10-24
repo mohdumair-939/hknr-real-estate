@@ -1,11 +1,23 @@
-# Render Blueprint — describes the web service. Nothing is created until you apply it
-# from the Render dashboard (New → Blueprint). See docs/deployment.md before applying.
+# Render Blueprint — describes the web service and its database. Nothing is created until you
+# apply it from the Render dashboard (New → Blueprint). See docs/deployment.md before applying.
+#
+# TRIAL SETUP (free plans). Before real customers use the site, upgrade both:
+#   - web "free" sleeps after ~15 min idle (30–60 s first load)   → "starter"
+#   - Postgres "free" is DELETED after 30 days, with all its data  → "basic-256mb" or higher
+databases:
+  - name: hknr-db
+    plan: free
+    region: singapore
+    postgresMajorVersion: "17"
+    databaseName: hknr
+    user: hknr
+
 services:
   - type: web
     name: hknr-website
     runtime: node
     # "starter" (paid) stays awake; "free" sleeps after inactivity and is slow on the first visit.
-    plan: starter
+    plan: free
     region: singapore
     buildCommand: npm ci && npm run db:migrate && npm run build
     startCommand: npm start
@@ -17,7 +29,9 @@ services:
       - key: APP_ENV
         value: production
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: hknr-db
+          property: connectionString
       - key: IP_HASH_SALT
         generateValue: true
       - key: ALLOW_INDEXING
